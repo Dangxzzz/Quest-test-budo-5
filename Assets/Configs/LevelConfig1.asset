@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa142044ea08c1a4397ed0d164df0284, type: 3}
+  m_Name: LevelConfig1
+  m_EditorClassIdentifier: 
+  Answer1: Norway
+  Answer2: Finland
+  Answer3: USA
+  Answer4: Canada
+  Description: What country is it?
+  Name: Question 1
+  NextLevels:
+  - {fileID: 11400000, guid: 95484cc2d6ecdc04aa3649d543aab35e, type: 2}
+  RightAnswer: Norway
+  SpriteLevel: {fileID: 21300000, guid: 23b73db97f07e1a47bd52b140240e12f, type: 3}

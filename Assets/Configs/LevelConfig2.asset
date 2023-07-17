@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa142044ea08c1a4397ed0d164df0284, type: 3}
+  m_Name: LevelConfig2
+  m_EditorClassIdentifier: 
+  Answer1: Minsk
+  Answer2: Zhodino
+  Answer3: Brest
+  Answer4: Nowhere
+  Description: Where is this?
+  Name: Question 2
+  NextLevels:
+  - {fileID: 11400000, guid: f5168908d620d234a94366fc36fa86e4, type: 2}
+  RightAnswer: Zhodino
+  SpriteLevel: {fileID: 21300000, guid: 5e0573dd207d6d647bef1bf6ab6c1870, type: 3}

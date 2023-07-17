@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa142044ea08c1a4397ed0d164df0284, type: 3}
+  m_Name: LevelConfig5
+  m_EditorClassIdentifier: 
+  Answer1: Avengers
+  Answer2: Harry Potter
+  Answer3: LOTR
+  Answer4: Matrix
+  Description: What is the name of this film?
+  Name: Question5
+  NextLevels:
+  - {fileID: 11400000, guid: 6670c6badfabe8549a7564725d69977f, type: 2}
+  RightAnswer: LOTR
+  SpriteLevel: {fileID: 21300000, guid: 53ca2a32df03b3d47951d0598e51364d, type: 3}

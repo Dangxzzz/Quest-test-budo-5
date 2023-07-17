@@ -1,32 +1,31 @@
-using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TextQuest : MonoBehaviour
 {
     #region Variables
 
-    public TMP_Text AnswersLabel;
+    public Button Answer1;
+    public Button Answer2;
+    public Button Answer3;
+    public Button Answer4;
+
     public Image BackGround;
     public TMP_Text DescriptionLabel;
+    public int Health = 2;
+    public TMP_Text HealthLabel;
+    public Button HelpButton;
     public Image LevelImage;
     public TMP_Text LevelNameLabel;
-    public int NeedScore;
 
-    public Level StartLevel;
+    public LevelConfig startLevelConfig;
 
-    private Level _currentLevel;
+    private Button[] _buttons;
 
-    private readonly KeyCode[] _inputKeys =
-    {
-        KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3,
-        KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6,
-        KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9,
-    };
-    
-    private readonly int _offset = 48;
+    private LevelConfig _currentLevelConfig;
+    private bool _isButtonClick;
 
     private int _score;
 
@@ -36,55 +35,21 @@ public class TextQuest : MonoBehaviour
 
     private void Start()
     {
-        _currentLevel = StartLevel;
+        _buttons = new[] { Answer1, Answer2, Answer3, Answer4 };
+        _currentLevelConfig = startLevelConfig;
         UpdateUi();
+        Answer1.onClick.AddListener(() => OnButtonClick(0));
+        Answer2.onClick.AddListener(() => OnButtonClick(1));
+        Answer3.onClick.AddListener(() => OnButtonClick(2));
+        Answer4.onClick.AddListener(() => OnButtonClick(3));
+        HelpButton.onClick.AddListener(OnButtonHelpClick);
     }
 
     private void Update()
     {
-        for (int i = 0; i < _inputKeys.Length; i++)
+        if (Health <= 0)
         {
-            if (IsNextLevelExist() && Input.GetKeyDown(_inputKeys[i]))
-            {
-                int answer = Convert.ToInt32(_inputKeys[i]);
-                Debug.Log(answer - _offset);
-                CheckAnswer(answer);
-            }
-        }
-    }
-
-    private void CheckAnswer(int answer)
-    {
-        if (answer - _offset == _currentLevel.RightAnswer)
-        {
-            _score++;
-            BackGround.color = Color.green;
-        }
-        else
-        {
-            BackGround.color = Color.red;
-        }
-    }
-
-    #endregion
-
-    #region Public methods
-
-    public void FinishPressed()
-    {
-        if (IsNextLevelExist())
-        {
-            _currentLevel = _currentLevel.NextLevels[_currentLevel.NextLevels.Length - 1];
-            UpdateUi();
-        }
-    }
-
-    public void NextPressed()
-    {
-        if (IsNextLevelExist())
-        {
-            _currentLevel = GetNextLevel();
-            UpdateUi();
+            SceneManager.LoadScene(Scenes.GameOverScene);
         }
     }
 
@@ -92,37 +57,85 @@ public class TextQuest : MonoBehaviour
 
     #region Private methods
 
-    private Level GetNextLevel()
+    private void CheckAnswer(string answer)
     {
-        return _currentLevel.NextLevels[0];
+        _isButtonClick = true;
+        if (answer == _currentLevelConfig.RightAnswer)
+        {
+            BackGround.color = Color.green;
+            Scenes.RightAnswers++;
+        }
+        else
+        {
+            Health--;
+            BackGround.color = Color.red;
+        }
+    }
+
+    private LevelConfig GetNextLevel()
+    {
+        return _currentLevelConfig.NextLevels[0];
     }
 
     private bool IsNextLevelExist()
     {
-        return _currentLevel.NextLevels.Length != 0;
+        return _currentLevelConfig.NextLevels.Length != 0;
+    }
+
+    private void OnButtonClick(int buttonIndex)
+    {
+        string answer = _buttons[buttonIndex].GetComponentInChildren<TextMeshProUGUI>().text;
+        if (!IsNextLevelExist())
+        {
+            SceneManager.LoadScene(Scenes.GameOverScene);
+        }
+        else
+        {
+            if (!_isButtonClick)
+            {
+                CheckAnswer(answer);
+                _currentLevelConfig = GetNextLevel();
+            }
+
+            Invoke("UpdateUi", 3f);
+        }
+    }
+
+    private void OnButtonHelpClick()
+    {
+        int deletedButtons = 0;
+        for (int i = 0; deletedButtons < _buttons.Length / 2; i++)
+        {
+            int deleteButton = Random.Range(0, 3);
+            if (_buttons[deleteButton].GetComponentInChildren<TextMeshProUGUI>().text !=
+                _currentLevelConfig.RightAnswer)
+            {
+                _buttons[deleteButton].gameObject.SetActive(false);
+                deletedButtons++;
+            }
+        }
     }
 
     private void UpdateUi()
     {
+        for (int i = 0; i < _buttons.Length; i++)
+        {
+            if (!_buttons[i].IsActive())
+            {
+                _buttons[i].gameObject.SetActive(true);
+            }
+        }
+
+        _isButtonClick = false;
+        Answer1.GetComponentInChildren<TextMeshProUGUI>().text = _currentLevelConfig.Answer1;
+        Answer2.GetComponentInChildren<TextMeshProUGUI>().text = _currentLevelConfig.Answer2;
+        Answer3.GetComponentInChildren<TextMeshProUGUI>().text = _currentLevelConfig.Answer3;
+        Answer4.GetComponentInChildren<TextMeshProUGUI>().text = _currentLevelConfig.Answer4;
         BackGround.color = Color.gray;
-        LevelNameLabel.text = _currentLevel.Name;
-        AnswersLabel.text = _currentLevel.Answers;
-        LevelImage.sprite = _currentLevel.SpriteLevel;
-        if (_currentLevel.NextLevels.Length == 0)
-        {
-            if (_score >= NeedScore)
-            {
-                DescriptionLabel.text = $"You win! Your score {_score}";
-            }
-            else
-            {
-                DescriptionLabel.text = $"You lose( Your score {_score}";
-            }
-        }
-        else
-        {
-            DescriptionLabel.text = _currentLevel.Description;
-        }
+        LevelNameLabel.text = _currentLevelConfig.Name;
+        LevelImage.sprite = _currentLevelConfig.SpriteLevel;
+        DescriptionLabel.text = _currentLevelConfig.Description;
+        HealthLabel.text = $"Health{Health}";
     }
 
     #endregion
